@@ -181,13 +181,13 @@ The code checks this condition automatically to prevent unstable simulations.
 
 # Project Structure
 
-
+```
 lid-driven-cavity/
 │
 ├── lid_driven_cavity_python_simple.py
 ├── lid_driven_cavity_result.png
 └── README.md
-
+```
 
 ---
 
