@@ -55,9 +55,9 @@ The simulation solves the **incompressible Navier–Stokes equations**.
 
 ### Momentum Equation
 
-```text
+
 du/dt + (u · ∇)u = - (1/ρ) ∇p + ν ∇²u + f
-```
+
 
 ### Incompressibility Condition
 
