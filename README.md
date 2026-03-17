@@ -1,233 +1,265 @@
 ﻿# Lid-Driven Cavity Flow Solver (Navier–Stokes)
 
-A numerical simulation of **incompressible fluid flow** inside a square cavity using the **Navier–Stokes equations**.
+A **2D Computational Fluid Dynamics (CFD) simulation** of incompressible fluid flow inside a square cavity using the **Navier–Stokes equations**.
 
-The solver is implemented from scratch using **Finite Difference Methods**, **explicit time stepping**, and **Chorin's Projection Method** to enforce incompressibility.
+The solver is implemented **from scratch in Python** using:
 
-This project demonstrates core concepts in **computational fluid dynamics (CFD)** and **scientific computing**.
+- Finite Difference Methods  
+- Explicit time stepping  
+- Chorin’s Projection Method for pressure–velocity coupling  
+
+This project demonstrates the fundamentals of **numerical PDE solving, fluid dynamics simulation, and scientific computing**.
 
 ---
 
-## Overview
+# Preview
 
-The **lid-driven cavity** is a classical benchmark problem in CFD.
+Example simulation output:
+
+![Simulation Result](lid_driven_cavity_result.png)
+
+The moving top wall drives the fluid, producing a **primary vortex inside the cavity**.
+
+- Streamlines → velocity field  
+- Color map → pressure distribution  
+
+---
+
+# Key Features
+
+- Implementation of **incompressible Navier–Stokes equations**
+- **Finite Difference discretization**
+- **Pressure Poisson solver**
+- **Chorin Projection Method**
+- Stability-checked explicit time integration
+- Velocity streamlines + pressure visualization
+- Pure **NumPy implementation**
+
+---
+
+# Overview
+
+The **lid-driven cavity problem** is a classical benchmark in computational fluid dynamics.
 
 A square cavity contains fluid.  
-The **top wall moves horizontally**, dragging the fluid and generating a circulating flow inside the cavity.
+The **top wall moves horizontally**, dragging the fluid and generating circulation.
 
-Over time, viscous effects cause the fluid to form a **primary vortex** in the center.
+Over time, viscous effects produce a **large primary vortex** inside the cavity.
 
 This benchmark is widely used to validate numerical solvers for the **incompressible Navier–Stokes equations**.
 
 ---
 
-## Governing Equations
+# Governing Equations
 
-The simulation solves the **incompressible Navier–Stokes equations**:
+The simulation solves the **incompressible Navier–Stokes equations**.
 
 ### Momentum Equation
 
+```
 ∂u/∂t + (u · ∇)u = −1/ρ ∇p + ν ∇²u + f
+```
 
-### Incompressibility Constraint
+### Incompressibility Condition
 
+```
 ∇ · u = 0
+```
 
 Where:
 
-| Symbol | Meaning                      |
-| ------ | ---------------------------- |
-| **u**  | velocity vector              |
-| **p**  | pressure                     |
-| **ν**  | kinematic viscosity          |
-| **ρ**  | density                      |
-| **f**  | external forcing (set to 0)  |
-| **∇**  | gradient/divergence operator |
-| **∇²** | Laplacian operator           |
+| Symbol | Meaning |
+|------|------|
+| **u** | velocity vector |
+| **p** | pressure |
+| **ν** | kinematic viscosity |
+| **ρ** | density |
+| **f** | external force |
+| **∇** | gradient/divergence operator |
+| **∇²** | Laplacian |
 
 ---
 
-## Physical Scenario
+# Physical Setup
 
 The simulation domain is a **unit square cavity**.
 
-            → → → moving lid (u = constant)
+```
+      → → → Moving Lid (constant velocity)
 
-1.0 +----------------------------------------+
-| |
-| |
-| |
-| |
-| |
-| |
-| |
-| |
-0.0 +----------------------------------------+
-0.0 1.0
+1.0 +--------------------------------+
+    |                                |
+    |                                |
+    |                                |
+    |                                |
+    |                                |
+    |                                |
+    |                                |
+0.0 +--------------------------------+
+    0.0                              1.0
+```
 
 Boundary conditions:
 
-| Boundary    | Condition                    |
-| ----------- | ---------------------------- |
-| Top wall    | constant horizontal velocity |
-| Bottom wall | u = 0, v = 0                 |
-| Left wall   | u = 0, v = 0                 |
-| Right wall  | u = 0, v = 0                 |
+| Boundary | Condition |
+|--------|--------|
+| Top wall | constant horizontal velocity |
+| Bottom wall | u = 0 , v = 0 |
+| Left wall | u = 0 , v = 0 |
+| Right wall | u = 0 , v = 0 |
 
 Initial condition:
 
+```
 u = 0
 v = 0
 p = 0
+```
 
 ---
 
-## Numerical Method
+# Numerical Method
 
-The solver uses **Chorin's Projection Method**, which splits the Navier–Stokes equations into simpler steps.
+The solver uses **Chorin’s Projection Method**.
 
 ### Step 1 — Tentative Velocity
 
-Solve the momentum equation **without pressure**:
+Solve the momentum equation without pressure:
 
+```
 ∂u/∂t + (u · ∇)u = ν ∇²u
+```
 
 ---
 
 ### Step 2 — Pressure Poisson Equation
 
-Compute pressure by solving:
-
+```
 ∇²p = ρ/Δt (∇ · u)
+```
 
-This ensures the velocity field becomes **divergence-free**.
+This enforces the **divergence-free constraint**.
 
 ---
 
 ### Step 3 — Velocity Correction
 
-Correct the velocity using the pressure gradient:
-
+```
 u ← u − Δt/ρ ∇p
+```
 
-This enforces **incompressibility**.
+The corrected velocity field satisfies **incompressibility**.
 
 ---
 
-## Numerical Implementation
+# Numerical Implementation
 
-The solver uses:
+| Method | Purpose |
+|------|------|
+| Finite Difference | spatial discretization |
+| Central Differences | gradients and divergence |
+| Explicit Time Stepping | time integration |
+| Iterative Poisson Solver | pressure calculation |
+| Streamline Plot | flow visualization |
 
-| Method                   | Description               |
-| ------------------------ | ------------------------- |
-| Finite Difference        | spatial discretization    |
-| Central Differences      | gradients and divergence  |
-| Explicit Time Stepping   | temporal integration      |
-| Iterative Poisson Solver | pressure equation         |
-| Streamline Visualization | flow field representation |
+Grid resolution used in this implementation:
 
-Grid resolution:
-
+```
 41 × 41 grid
+```
 
 ---
 
-## Stability Condition
+# Stability Condition
 
 Explicit schemes require a stable timestep:
 
-Δt ≤ (0.5 \* Δx²) / ν
+```
+Δt ≤ (0.5 × Δx²) / ν
+```
 
-The code automatically checks this condition to prevent unstable simulations.
-
----
-
-## Example Result
-
-The solver produces a **primary vortex inside the cavity**.
-
-- fluid moves right along the lid
-- circulates clockwise
-- forms a stable vortex
-
-Example output:
-
-![Simulation Result](lid_driven_cavity_result.png)
-
-Blue and red colors represent **pressure distribution**, while streamlines show **velocity flow paths**.
+The code checks this condition automatically to prevent unstable simulations.
 
 ---
 
-## Project Structure
+# Project Structure
 
+```
 lid-driven-cavity/
 │
 ├── lid_driven_cavity_python_simple.py
 ├── lid_driven_cavity_result.png
-├── README.md
+└── README.md
+```
 
 ---
 
-## Requirements
+# Requirements
 
-Python 3.8+
+Python **3.8+**
 
 Install dependencies:
 
+```
 pip install numpy matplotlib tqdm
+```
 
 ---
 
-## Running the Simulation
+# Running the Simulation
 
+Run the solver:
+
+```
 python lid_driven_cavity_python_simple.py
+```
 
 The script will:
 
-1. run the CFD simulation
-2. compute velocity and pressure fields
-3. generate the visualization
-4. save the result as:
+1. simulate fluid motion  
+2. compute velocity and pressure fields  
+3. generate streamlines and pressure contours  
+4. save the visualization  
 
+Output file:
+
+```
 lid_driven_cavity_result.png
+```
 
 ---
 
-## What This Project Demonstrates
+# What This Project Demonstrates
 
-This project showcases understanding of:
+This project illustrates key ideas in **scientific computing and CFD**:
 
 - numerical solution of **partial differential equations**
-- **Navier–Stokes fluid dynamics**
+- simulation of **Navier–Stokes fluid flow**
 - **finite difference discretization**
 - **pressure–velocity coupling**
-- **scientific visualization**
-
-It serves as a compact example of a **CFD solver implemented from scratch**.
+- visualization of physical simulations
 
 ---
 
-## Possible Improvements
+# Possible Extensions
 
-Future enhancements could include:
+Potential improvements include:
 
 - higher grid resolution
-- Reynolds number studies
+- Reynolds number experiments
 - comparison with **Ghia et al. benchmark data**
-- faster pressure solvers (Jacobi / Gauss–Seidel / multigrid)
+- faster Poisson solvers (Jacobi / Gauss–Seidel / multigrid)
 - GPU acceleration
 
 ---
 
-## References
+# References
 
-- Chorin, A. J. (1968). _Numerical solution of the Navier–Stokes equations._
-- Ghia, U., Ghia, K. N., & Shin, C. T. (1982). _High-Re solutions for incompressible flow using the Navier–Stokes equations._
+- Chorin, A. J. (1968) — *Numerical Solution of the Navier–Stokes Equations*  
+- Ghia, U., Ghia, K., Shin, C. (1982) — *High-Re solutions for incompressible cavity flow*
 
 ---
 
-## Author
+# Author
 
-Hetram Gugrwal  
-B.Tech Chemical Engineering  
-IIT Patna
+**Hetram**  
