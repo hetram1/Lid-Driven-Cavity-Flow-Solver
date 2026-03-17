@@ -55,15 +55,11 @@ The simulation solves the **incompressible Navier–Stokes equations**.
 
 ### Momentum Equation
 
-
 du/dt + (u · ∇)u = - (1/ρ) ∇p + ν ∇²u + f
-
 
 ### Incompressibility Condition
 
-
 ∇ · u = 0
-
 
 Where:
 
@@ -83,20 +79,11 @@ Where:
 
 The simulation domain is a **unit square cavity**.
 
+Moving lid (constant velocity) → → →
 
-      → → → moving lid (constant velocity)
-
-1.0 +--------------------------------+
-    |                                |
-    |                                |
-    |                                |
-    |                                |
-    |                                |
-    |                                |
-    |                                |
-0.0 +--------------------------------+
-    0.0                              1.0
-
+- Domain: unit square [0,1] × [0,1]
+- x (horizontal): 0.0 → 1.0
+- y (vertical): 0.0 → 1.0
 
 Boundary conditions:
 
@@ -109,11 +96,9 @@ Boundary conditions:
 
 Initial condition:
 
-
-u = 0
-v = 0
-p = 0
-
+- u = 0
+- v = 0
+- p = 0
 
 ---
 
@@ -123,17 +108,13 @@ The solver uses **Chorin’s Projection Method**.
 
 ### Step 1 — Tentative Velocity
 
-
 du/dt + (u · ∇)u = ν ∇²u
-
 
 ---
 
 ### Step 2 — Pressure Poisson Equation
 
-
 ∇²p = ρ/Δt (∇ · u)
-
 
 This enforces the **divergence-free constraint**.
 
@@ -141,9 +122,7 @@ This enforces the **divergence-free constraint**.
 
 ### Step 3 — Velocity Correction
 
-
 u ← u − (Δt/ρ) ∇p
-
 
 The corrected velocity field satisfies **incompressibility**.
 
@@ -159,21 +138,13 @@ The corrected velocity field satisfies **incompressibility**.
 | Iterative Poisson Solver | pressure calculation |
 | Streamline Plot | flow visualization |
 
-Grid resolution used:
-
-
-41 × 41 grid
-
+Grid resolution used: 41 × 41 grid
 
 ---
 
 # Stability Condition
 
-Explicit schemes require a stable timestep:
-
-
-Δt ≤ (0.5 × Δx²) / ν
-
+Explicit schemes require a stable timestep: Δt ≤ (0.5 × Δx²) / ν
 
 The code checks this condition automatically to prevent unstable simulations.
 
