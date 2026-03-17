@@ -61,9 +61,9 @@ du/dt + (u · ∇)u = - (1/ρ) ∇p + ν ∇²u + f
 
 ### Incompressibility Condition
 
-```
+
 ∇ · u = 0
-```
+
 
 Where:
 
@@ -83,7 +83,7 @@ Where:
 
 The simulation domain is a **unit square cavity**.
 
-```
+
       → → → moving lid (constant velocity)
 
 1.0 +--------------------------------+
@@ -96,7 +96,7 @@ The simulation domain is a **unit square cavity**.
     |                                |
 0.0 +--------------------------------+
     0.0                              1.0
-```
+
 
 Boundary conditions:
 
@@ -109,11 +109,11 @@ Boundary conditions:
 
 Initial condition:
 
-```
+
 u = 0
 v = 0
 p = 0
-```
+
 
 ---
 
@@ -123,17 +123,17 @@ The solver uses **Chorin’s Projection Method**.
 
 ### Step 1 — Tentative Velocity
 
-```
+
 du/dt + (u · ∇)u = ν ∇²u
-```
+
 
 ---
 
 ### Step 2 — Pressure Poisson Equation
 
-```
+
 ∇²p = ρ/Δt (∇ · u)
-```
+
 
 This enforces the **divergence-free constraint**.
 
@@ -141,9 +141,9 @@ This enforces the **divergence-free constraint**.
 
 ### Step 3 — Velocity Correction
 
-```
+
 u ← u − (Δt/ρ) ∇p
-```
+
 
 The corrected velocity field satisfies **incompressibility**.
 
@@ -161,9 +161,9 @@ The corrected velocity field satisfies **incompressibility**.
 
 Grid resolution used:
 
-```
+
 41 × 41 grid
-```
+
 
 ---
 
@@ -171,9 +171,9 @@ Grid resolution used:
 
 Explicit schemes require a stable timestep:
 
-```
+
 Δt ≤ (0.5 × Δx²) / ν
-```
+
 
 The code checks this condition automatically to prevent unstable simulations.
 
@@ -181,13 +181,13 @@ The code checks this condition automatically to prevent unstable simulations.
 
 # Project Structure
 
-```
+
 lid-driven-cavity/
 │
 ├── lid_driven_cavity_python_simple.py
 ├── lid_driven_cavity_result.png
 └── README.md
-```
+
 
 ---
 
@@ -197,9 +197,9 @@ Python **3.8+**
 
 Install dependencies:
 
-```
+
 pip install numpy matplotlib tqdm
-```
+
 
 ---
 
@@ -207,9 +207,8 @@ pip install numpy matplotlib tqdm
 
 Run the solver:
 
-```
+
 python lid_driven_cavity_python_simple.py
-```
 
 The script will:
 
@@ -220,9 +219,9 @@ The script will:
 
 Output file:
 
-```
+
 lid_driven_cavity_result.png
-```
+
 
 ---
 
